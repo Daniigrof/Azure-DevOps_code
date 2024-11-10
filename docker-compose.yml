@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:4.4.18
+    container_name: mongo
+    volumes:
+      - goalsDB:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Dani
+      - MONGO_INITDB_ROOT_PASSWORD=Dani3653
+      - MONGO_INITDB_DATABASE=MyDB
+  backend:
+    image: 'registry.hub.docker.com/daniigrof/goals-backend:tagname'
+    container_name: back
+    volumes:
+      - logs:/app/logs
+      - /app/node/modules
+    ports:
+      - '80:80'
+    environment:
+      - USER=Dani
+      - PASS=Dani3653
+    depends_on:
+      - mongodb
+  frontend:
+    image: 'daniigrof/goals-front:tagname'
+    container_name: front
+    ports:
+      - '3000:3000'
+    environment:
+      - REACT_APP_MACHINE=http://DanielMachine
+volumes:
+  logs:
+  goalsDB:
